@@ -1,21 +1,17 @@
 pipeline {
     agent any
-
     tools {
-        nodejs 'NodeJS 14.x' // Use the NodeJS configuration from Jenkins
+        nodejs 'NodeJS 24' // Use the NodeJS configuration from Jenkins
     }
-
     environment {
         CI = 'true'
     }
-
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/blessador/simple-nodejs-app.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 script {
@@ -23,7 +19,6 @@ pipeline {
                 }
             }
         }
-
         stage('Run Tests') {
             steps {
                 script {
@@ -31,7 +26,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build') {
             steps {
                 script {
@@ -39,16 +33,21 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy') {
             steps {
                 script {
                     // Deploy script or commands can be added here
                     bat 'echo Deploying the application...'
+                    //bat 'npm start'
+                    //bat 'node server.js'
+                    bat 'start /B node server.js'
+                    sleep 30
+                    bat 'taskkill /F /IM node.exe'
                 }
             }
         }
-    }
+       
+    } // end of Stages
 
     post {
         always {
@@ -63,3 +62,4 @@ pipeline {
         }
     }
 }
+
